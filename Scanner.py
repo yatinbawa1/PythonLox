@@ -11,18 +11,17 @@ class Scanner:
     source = ""
 
     def __init__(self):
-        self.source = '**'
+        self.source = '"Name"'
 
     def isAtEnd(self):
         return self.current >= len(self.source)
 
     def scanTokens(self):
-        print(self.source)
         while(not self.isAtEnd()):
             self.start = self.current
             self.scanToken()
-
-        print("{} is of {} type".format(
+        self.addToken(TokenType.EOF, None)
+        print("{} is of type{}".format(
             self.tokens[0].literal, self.tokens[0].type))
 
     def advance(self):
@@ -44,7 +43,6 @@ class Scanner:
         return self.source[self.current]
 
     def scanToken(self):
-        print("Scanning")
         c = self.advance()
         if c == '(':
             self.addToken(TokenType.LEFT_PAREN, None)
@@ -82,15 +80,14 @@ class Scanner:
             self.string()
 
     def string(self):
-        while(self.peek() != '"' and not self.isAtEnd):
+        while(self.peek() != '"' and (not self.isAtEnd())):
             if self.peek() == '\n':
                 line = line + 1
             self.advance()
-        value = self.source[self.start + 1: self.current - 1]
+        value = self.source[self.start + 1: self.current]
         self.addToken(TokenType.STRING, value)
 
     def addToken(self, type, literal):
-        print("{} found at {}".format(type, self.source[self.current - 1]))
         text = self.source[(self.start):(self.current)]
         self.tokens.append(Token(type, text, literal, self.line))
 
