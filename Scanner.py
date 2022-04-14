@@ -1,5 +1,4 @@
 from ast import Continue
-from pickle import NONE
 from Token import Token
 from TokenType import TokenType
 
@@ -131,8 +130,10 @@ class Scanner:
             Continue
         elif c == '\n':
             self.line += 1
+
         elif c == '"':
             self.string()
+
         else:
             if(self.isDigit(c)):
                 self.number()
@@ -183,19 +184,3 @@ class Scanner:
     def addToken(self, type, literal):
         text = self.source[(self.start):(self.current)]
         self.tokens.append(Token(type, text, literal, self.line))
-
-
-f = open("./file.lox", 'r')
-source = str(f.read())
-
-scan = Scanner(source)
-tokens = scan.scanTokens()
-l = 1
-for x in tokens[0:-1]:
-    if x.line > l:
-        l = l + 1
-        print("\n")
-    print(x.lexeme, end=" ")
-
-# for x in tokens:
-#     print("{} {}".format(x.lexeme, x.line))
